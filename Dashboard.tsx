@@ -9,7 +9,6 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 // Subjects
 const subjects = ['CS301', 'CS302', 'CS303', 'CSELEC1', 'GE ELEC 3CS'];
@@ -17,57 +16,51 @@ const subjects = ['CS301', 'CS302', 'CS303', 'CSELEC1', 'GE ELEC 3CS'];
 export default function App() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState<Date | null>(null);
+  const [date, setDate] = useState('');
   const [subject, setSubject] = useState('CS301');
   const [page, setPage] = useState('Home');
-  const [showCalendar, setShowCalendar] = useState(false);
-
-  // Format date
-  const formatDate = (value: Date) => {
-    const year = value.getFullYear();
-    const month = String(value.getMonth() + 1).padStart(2, '0');
-    const day = String(value.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
 
   // Add a task
   const addTask = () => {
-    if (!title.trim() || !date) {
-      Alert.alert(
-        'Missing Information',
-        'Please enter a task and select a deadline.'
-      );
+    if (!title.trim() || !date.trim()) {
+      Alert.alert('Missing Information', 'Please enter a task and deadline.');
+      return;
+    }
+
+    // Check the date format and actual date
+    const validDate = /^\d{4}-\d{2}-\d{2}$/.test(date);
+    const parsedDate = new Date(date + 'T00:00:00');
+
+    if (
+      !validDate ||
+      isNaN(parsedDate.getTime()) ||
+      parsedDate.toISOString().slice(0, 10) !== date
+    ) {
+      Alert.alert('Invalid Date', 'Use YYYY-MM-DD (example: 2026-10-15).');
       return;
     }
 
     const newTask = {
       id: Date.now().toString(),
       title: title.trim(),
-      date: formatDate(date),
+      date: date,
       subject: subject,
       done: false,
     };
 
+    // Add the task without losing existing tasks
     setTasks(previousTasks => [...previousTasks, newTask]);
 
+    // Clear the form and return to Home
     setTitle('');
-    setDate(null);
+    setDate('');
     setSubject('CS301');
     setPage('Home');
 
     Alert.alert('Success', 'Your task has been saved!');
   };
 
-  // Select a date
-  const onDateChange = (event: any, selectedDate?: Date) => {
-    setShowCalendar(false);
-
-    if (event.type === 'set' && selectedDate) {
-      setDate(selectedDate);
-    }
-  };
-
-  // Mark task as completed
+  // Toggle task completion
   const toggleTask = (id: string) => {
     setTasks(previousTasks =>
       previousTasks.map(task =>
@@ -107,7 +100,6 @@ export default function App() {
         <View>
           <Text style={styles.heading}>New Assignment</Text>
 
-          {/* Task name */}
           <TextInput
             style={styles.input}
             placeholder="Task or assignment"
@@ -115,28 +107,13 @@ export default function App() {
             onChangeText={setTitle}
           />
 
-          {/* Deadline calendar */}
-          <Text style={styles.heading}>Deadline</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Deadline (YYYY-MM-DD)"
+            value={date}
+            onChangeText={setDate}
+          />
 
-          <TouchableOpacity
-            style={styles.dateButton}
-            onPress={() => setShowCalendar(true)}
-          >
-            <Text style={styles.dateText}>
-              {date ? formatDate(date) : '📅 Select deadline'}
-            </Text>
-          </TouchableOpacity>
-
-          {showCalendar && (
-            <DateTimePicker
-              value={date || new Date()}
-              mode="date"
-              display="default"
-              onChange={onDateChange}
-            />
-          )}
-
-          {/* Subject selection */}
           <Text style={styles.heading}>Choose Subject</Text>
 
           <View style={styles.subjects}>
@@ -157,7 +134,6 @@ export default function App() {
             ))}
           </View>
 
-          {/* Save task */}
           <TouchableOpacity style={styles.add} onPress={addTask}>
             <Text style={styles.buttonText}>Save Task</Text>
           </TouchableOpacity>
@@ -186,13 +162,9 @@ export default function App() {
                   {item.title}
                 </Text>
 
-                <Text>
-                  {item.subject} • Due: {item.date}
-                </Text>
+                <Text>{item.subject} • Due: {item.date}</Text>
 
-                <Text
-                  style={item.done ? styles.completed : styles.pending}
-                >
+                <Text style={item.done ? styles.completed : styles.pending}>
                   {item.done ? 'Completed' : 'Pending'}
                 </Text>
               </TouchableOpacity>
@@ -252,17 +224,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
   },
-  dateButton: {
-    backgroundColor: 'white',
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'lightsteelblue',
-  },
-  dateText: {
-    fontSize: 16,
-    color: 'midnightblue',
-  },
   add: {
     backgroundColor: 'seagreen',
     padding: 12,
@@ -293,4 +254,4 @@ const styles = StyleSheet.create({
     color: 'darkorange',
     fontWeight: 'bold',
   },
-});s
+});
