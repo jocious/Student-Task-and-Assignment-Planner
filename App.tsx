@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import React, { useState } from 'react';
 import {
@@ -10,6 +11,13 @@ import {
   Alert,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+=======
+import React, { useState } from 'react';
+import {
+  View, Text, TextInput, TouchableOpacity,
+  FlatList, StyleSheet
+} from 'react-native';
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
 
 // Subjects
 const subjects = ['CS301', 'CS302', 'CS303', 'CSELEC1', 'GE ELEC 3CS'];
@@ -17,6 +25,7 @@ const subjects = ['CS301', 'CS302', 'CS303', 'CSELEC1', 'GE ELEC 3CS'];
 export default function App() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [title, setTitle] = useState('');
+<<<<<<< HEAD
   const [date, setDate] = useState<Date | null>(null);
   const [subject, setSubject] = useState('CS301');
   const [page, setPage] = useState('Home');
@@ -76,6 +85,34 @@ export default function App() {
           : task
       )
     );
+=======
+  const [date, setDate] = useState('');
+  const [subject, setSubject] = useState('CS301');
+  const [page, setPage] = useState('Home');
+
+  // Add a task
+  const addTask = () => {
+    if (!title.trim() || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+
+    setTasks([...tasks, {
+      id: Date.now().toString(),
+      title,
+      date,
+      subject,
+      done: false
+    }]);
+
+    setTitle('');
+    setDate('');
+    setPage('Home');
+  };
+
+  // Toggle completion
+  const toggleTask = (id: string) => {
+    setTasks(tasks.map(task =>
+      task.id === id ? { ...task, done: !task.done } : task
+    ));
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
   };
 
   // Sort tasks by deadline
@@ -87,15 +124,23 @@ export default function App() {
     <View style={styles.container}>
       <Text style={styles.title}>Student Planner</Text>
 
+<<<<<<< HEAD
       {/* Navigation */}
+=======
+      {/* Basic navigation */}
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
       <View style={styles.nav}>
         {['Home', 'Add Task'].map(item => (
           <TouchableOpacity
             key={item}
+<<<<<<< HEAD
             style={[
               styles.button,
               page === item && styles.activeButton,
             ]}
+=======
+            style={styles.button}
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
             onPress={() => setPage(item)}
           >
             <Text style={styles.buttonText}>{item}</Text>
@@ -107,7 +152,10 @@ export default function App() {
         <View>
           <Text style={styles.heading}>New Assignment</Text>
 
+<<<<<<< HEAD
           {/* Task name */}
+=======
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
           <TextInput
             style={styles.input}
             placeholder="Task or assignment"
@@ -115,6 +163,7 @@ export default function App() {
             onChangeText={setTitle}
           />
 
+<<<<<<< HEAD
           {/* Deadline calendar */}
           <Text style={styles.heading}>Deadline</Text>
 
@@ -139,10 +188,21 @@ export default function App() {
           {/* Subject selection */}
           <Text style={styles.heading}>Choose Subject</Text>
 
+=======
+          <TextInput
+            style={styles.input}
+            placeholder="Deadline (YYYY-MM-DD)"
+            value={date}
+            onChangeText={setDate}
+          />
+
+          <Text style={styles.heading}>Choose Subject</Text>
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
           <View style={styles.subjects}>
             {subjects.map(item => (
               <TouchableOpacity
                 key={item}
+<<<<<<< HEAD
                 style={[
                   styles.button,
                   subject === item && styles.selectedSubject,
@@ -152,12 +212,22 @@ export default function App() {
                 <Text style={styles.buttonText}>
                   {subject === item ? '✓ ' : ''}
                   {item}
+=======
+                style={styles.button}
+                onPress={() => setSubject(item)}
+              >
+                <Text style={styles.buttonText}>
+                  {subject === item ? '✓ ' : ''}{item}
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
 
+<<<<<<< HEAD
           {/* Save task */}
+=======
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
           <TouchableOpacity style={styles.add} onPress={addTask}>
             <Text style={styles.buttonText}>Save Task</Text>
           </TouchableOpacity>
@@ -169,12 +239,17 @@ export default function App() {
           <FlatList
             data={sortedTasks}
             keyExtractor={item => item.id}
+<<<<<<< HEAD
             extraData={tasks}
             contentContainerStyle={{ paddingBottom: 20 }}
             ListEmptyComponent={
               <Text style={styles.empty}>
                 No tasks yet. Add a task!
               </Text>
+=======
+            ListEmptyComponent={
+              <Text>No tasks yet. Add a task!</Text>
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
             }
             renderItem={({ item }) => (
               <TouchableOpacity
@@ -185,6 +260,7 @@ export default function App() {
                   {item.done ? '☑ ' : '☐ '}
                   {item.title}
                 </Text>
+<<<<<<< HEAD
 
                 <Text>
                   {item.subject} • Due: {item.date}
@@ -195,6 +271,10 @@ export default function App() {
                 >
                   {item.done ? 'Completed' : 'Pending'}
                 </Text>
+=======
+                <Text>{item.subject} • Due: {item.date}</Text>
+                <Text>{item.done ? 'Completed' : 'Pending'}</Text>
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
               </TouchableOpacity>
             )}
           />
@@ -236,12 +316,15 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
   },
+<<<<<<< HEAD
   activeButton: {
     backgroundColor: 'midnightblue',
   },
   selectedSubject: {
     backgroundColor: 'seagreen',
   },
+=======
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
@@ -252,6 +335,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
   },
+<<<<<<< HEAD
   dateButton: {
     backgroundColor: 'white',
     padding: 15,
@@ -263,6 +347,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'midnightblue',
   },
+=======
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
   add: {
     backgroundColor: 'seagreen',
     padding: 12,
@@ -281,6 +367,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+<<<<<<< HEAD
   empty: {
     color: 'slategrey',
     marginTop: 10,
@@ -294,3 +381,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });s
+=======
+});
+>>>>>>> eabdbb047585e28aea1a3604d0a80a77e1b13f27
